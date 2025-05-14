@@ -1,25 +1,24 @@
 <?php
 
-class UserController 
-{
+class UserController extends BaseController {
     private $userRepository;
     
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
+    public function __construct(UserRepositoryInterface $userRepository) {
         $this->userRepository = $userRepository;
     }
     
-    public function index()
-    {
+    public function index() {
         // Récupérer tous les utilisateurs
         $users = $this->userRepository->findAll();
         
-        // Charger la vue
-        require_once ROOT . 'views/users/index.php';
+        // Rendre la vue
+        $this->render('users/index.php', [
+            'title' => 'Liste des utilisateurs',
+            'users' => $users
+        ]);
     }
     
-    public function show($id)
-    {
+    public function show($id) {
         // Récupérer un utilisateur par son id
         $user = $this->userRepository->findById($id);
         
@@ -29,18 +28,21 @@ class UserController
             exit;
         }
         
-        // Charger la vue
-        require_once ROOT . 'views/users/show.php';
+        // Rendre la vue
+        $this->render('users/show.php', [
+            'title' => 'Détail de l\'utilisateur',
+            'user' => $user
+        ]);
     }
     
-    public function create()
-    {
-        // Afficher le formulaire de création
-        require_once ROOT . 'views/users/create.php';
+    public function create() {
+        // Rendre la vue du formulaire
+        $this->render('users/create.php', [
+            'title' => 'Ajouter un utilisateur'
+        ]);
     }
     
-    public function store()
-    {
+    public function store() {
         // Création d'un nouvel utilisateur
         $user = new User();
         $user->setUsername($_POST['username']);
@@ -48,7 +50,6 @@ class UserController
         
         // Valider les données
         if (!$user->isValid()) {
-            // Gérer l'erreur de validation
             $_SESSION['error'] = "Données utilisateur invalides";
             header('Location: /users/create');
             exit;
@@ -73,8 +74,7 @@ class UserController
         exit;
     }
     
-    public function edit($id)
-    {
+    public function edit($id) {
         // Récupérer l'utilisateur à modifier
         $user = $this->userRepository->findById($id);
         
@@ -84,12 +84,14 @@ class UserController
             exit;
         }
         
-        // Charger la vue
-        require_once ROOT . 'views/users/edit.php';
+        // Rendre la vue
+        $this->render('users/edit.php', [
+            'title' => 'Modifier l\'utilisateur',
+            'user' => $user
+        ]);
     }
     
-    public function update($id)
-    {
+    public function update($id) {
         // Récupérer l'utilisateur à modifier
         $user = $this->userRepository->findById($id);
         
@@ -129,8 +131,7 @@ class UserController
         exit;
     }
     
-    public function delete($id)
-    {
+    public function delete($id) {
         // Supprimer l'utilisateur
         if ($this->userRepository->delete($id)) {
             $_SESSION['success'] = "Utilisateur supprimé avec succès";

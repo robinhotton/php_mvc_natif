@@ -10,8 +10,18 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// IMPORTANT: Charger explicitement la classe Database AVANT de l'utiliser
+// IMPORTANT: Charger explicitement les classes dans le bon ordre
 require_once ROOT . 'config/Database.php';
+
+// Charger le contrôleur de base AVANT les autres contrôleurs
+require_once ROOT . 'controllers/BaseController.php';
+require_once ROOT . 'controllers/HomeController.php';
+require_once ROOT . 'controllers/UserController.php';
+
+// Charger les modèles et repositories
+require_once ROOT . 'models/User.php';
+require_once ROOT . 'repositories/UserRepositoryInterface.php';
+require_once ROOT . 'repositories/UserRepository.php';
 
 // Route simple
 $url = isset($_GET['url']) ? $_GET['url'] : '';
@@ -41,16 +51,11 @@ $params = array_slice($url, 2);
 // Charger le contrôleur
 $controllerFile = ROOT . 'controllers/' . $controller . 'Controller.php';
 if (file_exists($controllerFile)) {
-    require_once $controllerFile;
+    // Le fichier est déjà chargé plus haut, pas besoin de le recharger
     $controllerClass = $controller . 'Controller';
     
     // Créer le repository pour le contrôleur UserController
     if ($controllerClass === 'UserController') {
-        // Charger les modèles et repositories nécessaires
-        require_once ROOT . 'models/User.php';
-        require_once ROOT . 'repositories/UserRepositoryInterface.php';
-        require_once ROOT . 'repositories/UserRepository.php';
-        
         // Créer les instances - La classe Database est chargée plus haut
         $database = new Database();
         $userRepository = new UserRepository($database);

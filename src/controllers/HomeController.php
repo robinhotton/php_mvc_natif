@@ -1,12 +1,14 @@
 <?php
-class HomeController {
+
+class HomeController extends BaseController {
     public function index() {
-        // Exemple simple
-        $title = 'Accueil';
-        $message = 'Bienvenue sur votre application MVC avec Docker!';
+        // Données pour la vue
+        $data = [
+            'title' => 'Accueil',
+            'message' => 'Bienvenue sur votre application MVC avec Docker!'
+        ];
         
-        // Charger la vue
-        require_once ROOT . 'views/layout.php';
-        require_once ROOT . 'views/home.php';
+        // Rendre la vue
+        $this->render('home.php', $data);
     }
 }
