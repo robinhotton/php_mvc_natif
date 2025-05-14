@@ -1,15 +1,17 @@
 # PHP MVC Docker Environment
 
-Un environnement de développement Docker complet pour créer une application PHP MVC native avec MariaDB, sans nécessiter d'installation locale de PHP.
+Un environnement de développement Docker complet pour créer une application PHP MVC native avec MariaDB, sans nécessiter d'installation locale de PHP et avec hot-reload activé.
 
 ## 📋 Présentation
 
 Ce projet fournit une structure prête à l'emploi pour développer une application PHP suivant le pattern MVC (Modèle-Vue-Contrôleur). L'ensemble de l'environnement est containerisé avec Docker, ce qui vous permet de :
 
 - Développer sans installer PHP, Apache ou MariaDB localement
+- Bénéficier du hot-reload pour voir vos modifications sans redémarrer les conteneurs
 - Avoir un environnement de développement uniforme et reproductible
 - Démarrer rapidement avec une structure MVC basique mais fonctionnelle
 - Bénéficier d'une base de données MariaDB préconfigurée
+- Utiliser le pattern Repository pour une meilleure séparation des responsabilités
 
 ## 🔧 Technologies utilisées
 
@@ -18,6 +20,8 @@ Ce projet fournit une structure prête à l'emploi pour développer une applicat
 - **MariaDB 10.7** comme base de données
 - **phpMyAdmin** pour la gestion de la base de données
 - Architecture **MVC** légère et native
+- **Pattern Repository** pour l'accès aux données
+- **Hot-reload** pour le développement sans interruption
 
 ## 🚀 Installation et démarrage
 
@@ -34,29 +38,48 @@ Ce projet fournit une structure prête à l'emploi pour développer une applicat
    cd <nom-du-repo>
    ```
 
-2. Vérifiez que la structure des fichiers est correcte :
+2. La structure des fichiers est organisée comme suit :
    ```
    votre-projet/
    ├── Dockerfile
    ├── docker-compose.yml
+   ├── apache-custom.conf      # Configuration Apache pour le hot-reload
    ├── README.md
    ├── database/
    │   └── init/
-   │       └── 001-init.sql
+   │       └── 001-init.sql    # Script d'initialisation de la base de données
    └── src/
        ├── config/
-       │   └── Database.php
+       │   └── Database.php    # Configuration de la base de données
        ├── controllers/
-       │   └── HomeController.php
+       │   ├── BaseController.php  # Contrôleur de base avec système de template
+       │   ├── HomeController.php  # Contrôleur pour la page d'accueil
+       │   └── UserController.php  # Contrôleur pour la gestion des utilisateurs
        ├── models/
-       │   └── User.php
+       │   └── User.php        # Modèle d'utilisateur
+       ├── repositories/
+       │   ├── UserRepositoryInterface.php  # Interface du repository
+       │   └── MysqlUserRepository.php      # Implémentation MySQL du repository
+       ├── routes/
+       │   ├── Router.php      # Système de routage
+       │   └── routes.php      # Définition des routes
        ├── views/
-       │   ├── home.php
-       │   └── layout.php
+       │   ├── layout.php      # Layout principal
+       │   ├── home.php        # Vue pour la page d'accueil
+       │   └── users/          # Vues pour la gestion des utilisateurs
+       │       ├── index.php
+       │       ├── show.php
+       │       ├── create.php
+       │       └── edit.php
        ├── public/
-       │   ├── index.php
-       │   └── .htaccess
-       └── .htaccess
+       │   ├── assets/
+       │   │   ├── css/
+       │   │   │   └── style.css  # Styles CSS centralisés
+       │   │   ├── js/
+       │   │   └── img/
+       │   ├── index.php       # Point d'entrée de l'application
+       │   └── .htaccess       # Configuration des URLs propres
+       └── .htaccess           # Redirection vers public/
    ```
 
 3. Lancez l'environnement avec Docker Compose :
@@ -73,27 +96,37 @@ Ce projet fournit une structure prête à l'emploi pour développer une applicat
   - Utilisateur : `mvc_user`
   - Mot de passe : `mvc_password`
 
-## 📁 Structure du projet
+## 📁 Architecture du projet
 
-Le projet suit une architecture MVC simple :
+Le projet suit une architecture MVC améliorée avec le pattern Repository :
 
 - **Modèles** (`/src/models/`) : Représentent les données et la logique métier
 - **Vues** (`/src/views/`) : Gèrent l'affichage et l'interface utilisateur
 - **Contrôleurs** (`/src/controllers/`) : Traitent les requêtes et orchestrent le flux
+- **Repositories** (`/src/repositories/`) : Gèrent l'accès aux données
+- **Routes** (`/src/routes/`) : Système de routage centralisé
 - **Configuration** (`/src/config/`) : Contient les fichiers de configuration
+- **Assets** (`/src/public/assets/`) : Ressources statiques (CSS, JS, images)
 
-### Routage
+### Système de routage
 
-Le routage suit le format : `http://localhost/controller/action/param1/param2`
+Le routage est centralisé dans le fichier `src/routes/routes.php` et suit le format :
+```php
+$router->get('users', ['UserController', 'index']);
+$router->get('users/show/:id', ['UserController', 'show']);
+```
 
-- Si aucun contrôleur n'est spécifié, le contrôleur par défaut est `Home`
-- Si aucune action n'est spécifiée, l'action par défaut est `index`
+Les paramètres dynamiques sont spécifiés avec `:` (exemple : `:id`).
 
-## 💻 Développement
+## 💻 Développement avec hot-reload
 
 ### Modification des fichiers
 
-Les fichiers sources se trouvent dans le répertoire `src/`. Vous pouvez les modifier directement sur votre machine hôte - les changements seront automatiquement reflétés dans le conteneur Docker grâce au volume configuré.
+Les fichiers sources se trouvent dans le répertoire `src/`. Vous pouvez les modifier directement sur votre machine hôte et les changements seront automatiquement reflétés sans avoir à redémarrer les conteneurs.
+
+- **PHP** : Modifications prises en compte immédiatement
+- **CSS/JS** : Rechargement automatique grâce à la configuration Apache
+- **Vues** : Mises à jour instantanément lors du rafraîchissement du navigateur
 
 ### Base de données
 
@@ -106,12 +139,12 @@ Pour ajouter de nouvelles tables ou modifier le schéma :
 
 ## 🧰 Gestion des conteneurs
 
-### Commandes utiles
-
 - **Démarrer l'environnement** : `docker-compose up -d`
+- **Démarrer avec logs** : `docker-compose up`
 - **Arrêter l'environnement** : `docker-compose down`
 - **Voir les logs** : `docker-compose logs -f`
 - **Reconstruire les images** : `docker-compose build --no-cache`
+- **Redémarrer un service** : `docker-compose restart php`
 - **Ouvrir un terminal dans le conteneur PHP** : `docker-compose exec php bash`
 
 ## 🛠️ Personnalisation
@@ -125,14 +158,6 @@ Pour ajouter de nouvelles tables ou modifier le schéma :
 
 Changez les variables d'environnement dans le fichier `docker-compose.yml` sous les services `mariadb` et `php`.
 
-## 📝 Notes supplémentaires
+### Ajouter des routes
 
-- Les fichiers `.htaccess` sont configurés pour permettre des URL propres et le routage MVC
-- Le projet est configuré pour un environnement de développement. Pour la production, des modifications de sécurité seraient nécessaires.
-- Tous les fichiers sont accessibles directement depuis votre éditeur de code préféré, sans avoir à se connecter aux conteneurs.
-
-## 🚨 Résolution des problèmes courants
-
-- **L'application n'est pas accessible** : Vérifiez que les conteneurs sont en cours d'exécution avec `docker ps`
-- **Erreur de connexion à la base de données** : Assurez-vous que les identifiants correspondent dans `docker-compose.yml` et `src/config/Database.php`
-- **Modifications de fichiers non prises en compte** : Certains serveurs peuvent nécessiter un redémarrage du conteneur : `docker-compose restart php`
+Modifiez le fichier `src/routes/routes.php` pour ajouter de nouvelles routes.
