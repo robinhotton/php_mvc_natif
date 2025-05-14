@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Service PHP + Apache
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=mvc_project
+      - DB_USERNAME=mvc_user
+      - DB_PASSWORD=mvc_password
+
+  # Service MariaDB
+  mariadb:
+    image: mariadb:10.7
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mvc_project
+      MYSQL_USER: mvc_user
+      MYSQL_PASSWORD: mvc_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  # Service phpMyAdmin (optionnel)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
