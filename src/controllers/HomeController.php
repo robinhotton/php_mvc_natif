@@ -4,8 +4,8 @@ class HomeController extends BaseController {
     public function index() {
         // Données pour la vue
         $data = [
-            'title' => 'Accueil',
-            'message' => 'Bienvenue sur votre application MVC avec Docker!'
+            'title' => 'PHP MVC Docker',
+            'message' => 'Un environnement de développement complet pour vos applications PHP'
         ];
         
         // Rendre la vue

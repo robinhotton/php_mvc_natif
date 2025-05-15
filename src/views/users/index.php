@@ -5,7 +5,6 @@
 <table>
     <thead>
         <tr>
-            <th>ID</th>
             <th>Nom d'utilisateur</th>
             <th>Email</th>
             <th>Date de création</th>
@@ -16,12 +15,11 @@
     <tbody>
         <?php if (empty($users)): ?>
             <tr>
-                <td colspan="6">Aucun utilisateur trouvé</td>
+                <td colspan="5">Aucun utilisateur trouvé</td>
             </tr>
         <?php else: ?>
             <?php foreach ($users as $user): ?>
                 <tr>
-                    <td><?php echo $user->getId(); ?></td>
                     <td><?php echo htmlspecialchars($user->getUsername()); ?></td>
                     <td><?php echo htmlspecialchars($user->getEmail()); ?></td>
                     <td><?php echo $user->getCreatedAt(); ?></td>

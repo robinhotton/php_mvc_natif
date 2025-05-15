@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($title) ? $title : 'Application MVC'; ?></title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="navbar">
         <a href="/" <?php echo (empty($_GET['url']) || $_GET['url'] == 'home') ? 'class="active"' : ''; ?>>Accueil</a>
         <a href="/users" <?php echo (isset($_GET['url']) && strpos($_GET['url'], 'users') === 0) ? 'class="active"' : ''; ?>>Utilisateurs</a>
-        <!-- Ajoutez d'autres liens de navigation ici -->
     </div>
 
     <div class="container">
@@ -29,9 +29,39 @@
         <?php endif; ?>
 
         <?php
-        // CORRECTION : Afficher directement la variable $content au lieu de l'inclure
         echo $content;
         ?>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>À propos</h3>
+                <p>Application MVC PHP développée avec Docker, permettant une gestion simple et efficace des données avec le pattern Repository.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Liens rapides</h3>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/users">Utilisateurs</a></li>
+                    <li><a href="https://github.com/robinhotton/php_mvc_natif" target="_blank">GitHub</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact</h3>
+                <p><i class="fa fa-envelope"></i> support@tecken.fr</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/diginamic"><i class="fab fa-facebook"></i></a>
+                    <a href="https://x.com/Diginamic"><i class="fab fa-twitter"></i></a>
+                    <a href="https://fr.linkedin.com/school/diginamic/"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/robinhotton/php_mvc_natif"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; <?php echo date('Y'); ?> PHP natif MVC Docker | Développé par Robin HOTTON pour Diginamic | Tous droits réservés
+        </div>
+    </footer>
 </body>
 </html>
