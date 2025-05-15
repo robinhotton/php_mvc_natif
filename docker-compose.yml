@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-  # Service PHP + Apache
+  # Service PHP + Apache (build from Dockerfile)
   php:
+    container_name: mvc_php
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,8 +22,8 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
 
-  # Service MariaDB
   mariadb:
+    container_name: mvc_mariadb
     image: mariadb:10.7
     restart: always
     ports:
@@ -38,8 +39,8 @@ services:
     networks:
       - app-network
 
-  # Service phpMyAdmin (optionnel)
   phpmyadmin:
+    container_name: mvc_phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
       - "${PHPMYADMIN_PORT}:80"
