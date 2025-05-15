@@ -17,6 +17,10 @@
         <span class="label">Date de création:</span>
         <span><?php echo $user->getCreatedAt(); ?></span>
     </div>
+    <div class="user-detail">
+        <span class="label">Date de mise à jour:</span>
+        <span><?php echo $user->getUpdatedAt(); ?></span>
+    </div>
 </div>
 
 <div class="actions">

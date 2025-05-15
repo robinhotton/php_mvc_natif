@@ -6,6 +6,7 @@ class User
     private $username;
     private $email;
     private $createdAt;
+    private $updatedAt;
     
     public function getId(): ?int
     {
@@ -48,6 +49,17 @@ class User
     public function setCreatedAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?string
+    {
+        return $this->updatedAt;
+    }
+    
+    public function setUpdatedAt(string $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
     

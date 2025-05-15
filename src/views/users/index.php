@@ -9,13 +9,14 @@
             <th>Nom d'utilisateur</th>
             <th>Email</th>
             <th>Date de création</th>
+            <th>Date de mise à jour</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <?php if (empty($users)): ?>
             <tr>
-                <td colspan="5">Aucun utilisateur trouvé</td>
+                <td colspan="6">Aucun utilisateur trouvé</td>
             </tr>
         <?php else: ?>
             <?php foreach ($users as $user): ?>
@@ -24,6 +25,7 @@
                     <td><?php echo htmlspecialchars($user->getUsername()); ?></td>
                     <td><?php echo htmlspecialchars($user->getEmail()); ?></td>
                     <td><?php echo $user->getCreatedAt(); ?></td>
+                    <td><?php echo $user->getUpdatedAt(); ?></td>
                     <td class="actions">
                         <a href="/users/show/<?php echo $user->getId(); ?>" class="btn btn-primary">Voir</a>
                         <a href="/users/edit/<?php echo $user->getId(); ?>" class="btn btn-primary">Modifier</a>

@@ -133,6 +133,7 @@ class UserRepository implements UserRepositoryInterface
         $user->setUsername($row['username']);
         $user->setEmail($row['email']);
         $user->setCreatedAt($row['created_at']);
+        $user->setUpdatedAt($row['updated_at']);
         
         return $user;
     }
