@@ -1,5 +1,4 @@
 <?php
-// src/models/User.php
 
 class User 
 {
@@ -8,7 +7,6 @@ class User
     private $email;
     private $createdAt;
     
-    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
@@ -56,11 +54,12 @@ class User
     // Méthodes métier - la logique du modèle
     public function isValid(): bool
     {
-        // Validation du modèle
+        // Validation du nom d'utilisateur
         if (empty($this->username) || strlen($this->username) < 3) {
             return false;
         }
         
+        // Validation de l'email
         if (empty($this->email) || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
