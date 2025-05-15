@@ -43,30 +43,31 @@ Ce projet fournit une structure prête à l'emploi pour développer une applicat
    votre-projet/
    ├── Dockerfile
    ├── docker-compose.yml
-   ├── apache-custom.conf      # Configuration Apache pour le hot-reload
+   ├── .env                         # Variables d'environnement pour Docker   
+   ├── .env.example                 # Exemple de fichier d'environnement
    ├── README.md
    ├── database/
    │   └── init/
-   │       └── 001-init.sql    # Script d'initialisation de la base de données
+   │       └── 001-init.sql         # Script d'initialisation de la base de données
    └── src/
        ├── config/
-       │   └── Database.php    # Configuration de la base de données
+       │   └── Database.php         # Configuration de la base de données
        ├── controllers/
-       │   ├── BaseController.php  # Contrôleur de base avec système de template
-       │   ├── HomeController.php  # Contrôleur pour la page d'accueil
-       │   └── UserController.php  # Contrôleur pour la gestion des utilisateurs
+       │   ├── BaseController.php   # Contrôleur de base avec système de template
+       │   ├── HomeController.php   # Contrôleur pour la page d'accueil
+       │   └── UserController.php   # Contrôleur pour la gestion des utilisateurs
        ├── models/
-       │   └── User.php        # Modèle d'utilisateur
+       │   └── User.php             # Modèle d'utilisateur
        ├── repositories/
        │   ├── UserRepositoryInterface.php  # Interface du repository
        │   └── MysqlUserRepository.php      # Implémentation MySQL du repository
        ├── routes/
-       │   ├── Router.php      # Système de routage
-       │   └── routes.php      # Définition des routes
+       │   ├── Router.php           # Système de routage
+       │   └── routes.php           # Définition des routes
        ├── views/
-       │   ├── layout.php      # Layout principal
-       │   ├── home.php        # Vue pour la page d'accueil
-       │   └── users/          # Vues pour la gestion des utilisateurs
+       │   ├── layout.php           # Layout principal
+       │   ├── home.php             # Vue pour la page d'accueil
+       │   └── users/               # Vues pour la gestion des utilisateurs
        │       ├── index.php
        │       ├── show.php
        │       ├── create.php
@@ -74,12 +75,12 @@ Ce projet fournit une structure prête à l'emploi pour développer une applicat
        ├── public/
        │   ├── assets/
        │   │   ├── css/
-       │   │   │   └── style.css  # Styles CSS centralisés
+       │   │   │   └── style.css    # Styles CSS centralisés
        │   │   ├── js/
        │   │   └── img/
-       │   ├── index.php       # Point d'entrée de l'application
-       │   └── .htaccess       # Configuration des URLs propres
-       └── .htaccess           # Redirection vers public/
+       │   ├── index.php            # Point d'entrée de l'application
+       │   └── .htaccess            # Configuration des URLs propres
+       └── .htaccess                # Redirection vers public/
    ```
 
 3. Lancez l'environnement avec Docker Compose :
