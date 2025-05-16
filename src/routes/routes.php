@@ -15,6 +15,13 @@ return function($router) {
     $router->post('users/update/:id', ['UserController', 'update']);
     $router->get('users/delete/:id', ['UserController', 'delete']);
     
+    // Routes pour l'authentification
+    $router->get('login', ['AuthController', 'loginForm']);
+    $router->post('login', ['AuthController', 'login']);
+    $router->get('logout', ['AuthController', 'logout']);
+    $router->get('register', ['AuthController', 'registerForm']);
+    $router->post('register', ['AuthController', 'register']);
+
     // Gestion des routes non trouvées (404)
     $router->notFound(function() {
         header("HTTP/1.0 404 Not Found");

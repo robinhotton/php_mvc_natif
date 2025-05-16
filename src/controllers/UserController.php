@@ -2,12 +2,17 @@
 
 class UserController extends BaseController {
     private $userRepository;
+    private $authService;
     
-    public function __construct(UserRepositoryInterface $userRepository) {
+    public function __construct(UserRepositoryInterface $userRepository, AuthService $authService) {
         $this->userRepository = $userRepository;
+        $this->authService = $authService;
     }
     
     public function index() {
+        // Vérifier si l'utilisateur est connecté
+        $this->authService->requireLogin('/login');
+        
         // Récupérer tous les utilisateurs
         $users = $this->userRepository->findAll();
         
@@ -19,6 +24,9 @@ class UserController extends BaseController {
     }
     
     public function show($id) {
+        // Vérifier si l'utilisateur est connecté
+        $this->authService->requireLogin('/login');
+        
         // Récupérer un utilisateur par son id
         $user = $this->userRepository->findById($id);
         
@@ -27,7 +35,7 @@ class UserController extends BaseController {
             header('Location: /users');
             exit;
         }
-        
+
         // Rendre la vue
         $this->render('users/show.php', [
             'title' => 'Détail de l\'utilisateur',
@@ -36,6 +44,9 @@ class UserController extends BaseController {
     }
     
     public function create() {
+        // Vérifier si l'utilisateur est admin
+        $this->authService->requireRole('admin', '/users');
+        
         // Rendre la vue du formulaire
         $this->render('users/create.php', [
             'title' => 'Ajouter un utilisateur'
@@ -43,10 +54,15 @@ class UserController extends BaseController {
     }
     
     public function store() {
+        // Vérifier si l'utilisateur est admin
+        $this->authService->requireRole('admin', '/users');
+        
         // Création d'un nouvel utilisateur
         $user = new User();
         $user->setUsername($_POST['username']);
         $user->setEmail($_POST['email']);
+        $user->setPassword($_POST['password']);
+        $user->setRole($_POST['role'] ?? 'user');
         
         // Valider les données
         if (!$user->isValid()) {
@@ -75,11 +91,22 @@ class UserController extends BaseController {
     }
     
     public function edit($id) {
+        // Vérifier si l'utilisateur est connecté
+        $this->authService->requireLogin('/login');
+        
         // Récupérer l'utilisateur à modifier
         $user = $this->userRepository->findById($id);
         
         if (!$user) {
             $_SESSION['error'] = "Utilisateur non trouvé";
+            header('Location: /users');
+            exit;
+        }
+        
+        // Vérifier si l'utilisateur a le droit de modifier ce profil
+        $currentUser = $this->authService->getCurrentUser();
+        if ($user->getId() !== $currentUser->getId() && !$this->authService->isAdmin()) {
+            $_SESSION['error'] = "Vous n'avez pas les droits nécessaires pour modifier ce profil";
             header('Location: /users');
             exit;
         }
@@ -87,11 +114,15 @@ class UserController extends BaseController {
         // Rendre la vue
         $this->render('users/edit.php', [
             'title' => 'Modifier l\'utilisateur',
-            'user' => $user
+            'user' => $user,
+            'isAdmin' => $this->authService->isAdmin()
         ]);
     }
     
     public function update($id) {
+        // Vérifier si l'utilisateur est connecté
+        $this->authService->requireLogin('/login');
+        
         // Récupérer l'utilisateur à modifier
         $user = $this->userRepository->findById($id);
         
@@ -101,9 +132,27 @@ class UserController extends BaseController {
             exit;
         }
         
+        // Vérifier si l'utilisateur a le droit de modifier ce profil
+        $currentUser = $this->authService->getCurrentUser();
+        if ($user->getId() !== $currentUser->getId() && !$this->authService->isAdmin()) {
+            $_SESSION['error'] = "Vous n'avez pas les droits nécessaires pour modifier ce profil";
+            header('Location: /users');
+            exit;
+        }
+        
         // Mettre à jour les données
         $user->setUsername($_POST['username']);
         $user->setEmail($_POST['email']);
+        
+        // Si un nouveau mot de passe est fourni, le mettre à jour
+        if (!empty($_POST['password'])) {
+            $user->setPassword($_POST['password']);
+        }
+        
+        // Seul un admin peut changer le rôle
+        if ($this->authService->isAdmin() && isset($_POST['role'])) {
+            $user->setRole($_POST['role']);
+        }
         
         // Valider les données
         if (!$user->isValid()) {
@@ -132,6 +181,26 @@ class UserController extends BaseController {
     }
     
     public function delete($id) {
+        // Vérifier si l'utilisateur est admin
+        $this->authService->requireRole('admin', '/users');
+        
+        // Récupérer l'utilisateur à supprimer
+        $user = $this->userRepository->findById($id);
+        
+        if (!$user) {
+            $_SESSION['error'] = "Utilisateur non trouvé";
+            header('Location: /users');
+            exit;
+        }
+        
+        // Empêcher la suppression de son propre compte
+        $currentUser = $this->authService->getCurrentUser();
+        if ($user->getId() === $currentUser->getId()) {
+            $_SESSION['error'] = "Vous ne pouvez pas supprimer votre propre compte";
+            header('Location: /users');
+            exit;
+        }
+        
         // Supprimer l'utilisateur
         if ($this->userRepository->delete($id)) {
             $_SESSION['success'] = "Utilisateur supprimé avec succès";

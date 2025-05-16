@@ -9,10 +9,37 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="/" <?php echo (empty($_GET['url']) || $_GET['url'] == 'home') ? 'class="active"' : ''; ?>>Accueil</a>
-        <a href="/users" <?php echo (isset($_GET['url']) && strpos($_GET['url'], 'users') === 0) ? 'class="active"' : ''; ?>>Utilisateurs</a>
+        <div class="navbar-left">
+            <a href="/" class="brand">
+                <i class="fas fa-code"></i> PHP MVC
+            </a>
+            <a href="/" <?php echo (empty($_GET['url']) || $_GET['url'] == 'home') ? 'class="active"' : ''; ?>>Accueil</a>
+            <a href="/users" <?php echo (isset($_GET['url']) && strpos($_GET['url'], 'users') === 0) ? 'class="active"' : ''; ?>>Utilisateurs</a>
+        </div>
+       
+        <!-- Partie droite de la navbar pour l'authentification -->
+        <div class="navbar-right">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="/users/show/<?php echo $_SESSION['user_id']; ?>" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <?php echo htmlspecialchars($_SESSION['username']); ?>
+                    <?php if ($_SESSION['role'] === 'admin'): ?>
+                        <span class="badge badge-admin">Admin</span>
+                    <?php endif; ?>
+                </a>
+                <a href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            <?php else: ?>
+                <a href="/login" <?php echo (isset($_GET['url']) && $_GET['url'] == 'login') ? 'class="active"' : ''; ?>>
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </a>
+                <a href="/register" <?php echo (isset($_GET['url']) && $_GET['url'] == 'register') ? 'class="active"' : ''; ?>>
+                    <i class="fas fa-user-plus"></i> Inscription
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
-
     <div class="container">
         <?php if (isset($_SESSION['success'])): ?>
             <div class="message success">
@@ -20,20 +47,18 @@
                 <?php unset($_SESSION['success']); ?>
             </div>
         <?php endif; ?>
-        
+       
         <?php if (isset($_SESSION['error'])): ?>
             <div class="message error">
                 <?php echo $_SESSION['error']; ?>
                 <?php unset($_SESSION['error']); ?>
             </div>
         <?php endif; ?>
-
         <?php
         echo $content;
         ?>
     </div>
-
-    <!-- Footer -->
+    <!-- Footer reste inchangé -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section about">
