@@ -35,14 +35,6 @@ class Router
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $route = trim($requestUri, '/');
         
-        // Debug - Afficher la route et les routes disponibles
-        /*
-        echo "<pre>Route demandée: " . $route . "\n\n";
-        echo "Routes disponibles:\n";
-        print_r($this->routes[$method]);
-        echo "</pre>";
-        */
-        
         // Si la route n'existe pas directement
         $callback = isset($this->routes[$method][$route]) ? $this->routes[$method][$route] : null;
         $params = [];

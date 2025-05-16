@@ -1,5 +1,4 @@
 <?php
-// controllers/AuthController.php - Version corrigée
 
 class AuthController extends BaseController
 {
@@ -9,7 +8,7 @@ class AuthController extends BaseController
     public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
-        $this->userRepository = $authService->getUserRepository(); // Méthode à ajouter à AuthService
+        $this->userRepository = $authService->getUserRepository();
     }
     
     /**

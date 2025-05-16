@@ -1,6 +1,8 @@
 <h1>Liste des utilisateurs</h1>
 
-<a href="/users/create" class="btn btn-success">Ajouter un utilisateur</a>
+<?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+    <a href="/users/create" class="btn btn-success">Ajouter un utilisateur</a>
+<?php endif; ?>
 
 <table>
     <thead>
@@ -26,12 +28,6 @@
                     <td><?php echo $user->getUpdatedAt(); ?></td>
                     <td class="actions">
                         <a href="/users/show/<?php echo $user->getId(); ?>" class="btn btn-primary">Voir</a>
-                        <a href="/users/edit/<?php echo $user->getId(); ?>" class="btn btn-primary">Modifier</a>
-                        <a href="/users/delete/<?php echo $user->getId(); ?>" 
-                           class="btn btn-danger" 
-                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
-                           Supprimer
-                        </a>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -9,11 +9,11 @@
 </head>
 <body>
     <div class="navbar">
+        <!-- Partie gauche de la navbar pour la redirection -->
         <div class="navbar-left">
             <a href="/" class="brand">
                 <i class="fas fa-code"></i> PHP MVC
             </a>
-            <a href="/" <?php echo (empty($_GET['url']) || $_GET['url'] == 'home') ? 'class="active"' : ''; ?>>Accueil</a>
             <a href="/users" <?php echo (isset($_GET['url']) && strpos($_GET['url'], 'users') === 0) ? 'class="active"' : ''; ?>>Utilisateurs</a>
         </div>
        
@@ -40,25 +40,13 @@
             <?php endif; ?>
         </div>
     </div>
+
     <div class="container">
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="message success">
-                <?php echo $_SESSION['success']; ?>
-                <?php unset($_SESSION['success']); ?>
-            </div>
-        <?php endif; ?>
-       
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="message error">
-                <?php echo $_SESSION['error']; ?>
-                <?php unset($_SESSION['error']); ?>
-            </div>
-        <?php endif; ?>
         <?php
         echo $content;
         ?>
     </div>
-    <!-- Footer reste inchangé -->
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section about">

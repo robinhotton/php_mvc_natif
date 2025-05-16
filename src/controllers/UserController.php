@@ -19,7 +19,8 @@ class UserController extends BaseController {
         // Rendre la vue
         $this->render('users/index.php', [
             'title' => 'Liste des utilisateurs',
-            'users' => $users
+            'users' => $users,
+            'authService' => $this->authService
         ]);
     }
     

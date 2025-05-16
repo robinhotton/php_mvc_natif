@@ -1,5 +1,4 @@
 <?php
-// services/AuthService.php
 
 class AuthService
 {
