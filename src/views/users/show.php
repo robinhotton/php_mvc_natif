@@ -25,10 +25,12 @@
 
 <div class="actions">
     <a href="/users" class="btn btn-default">Retour à la liste</a>
-    <a href="/users/edit/<?php echo $user->getId(); ?>" class="btn btn-warning">Modifier</a>
-    <a href="/users/delete/<?php echo $user->getId(); ?>" 
-       class="btn btn-danger" 
-       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
-       Supprimer
-    </a>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+        <a href="/users/edit/<?php echo $user->getId(); ?>" class="btn btn-warning">Modifier</a>
+        <a href="/users/delete/<?php echo $user->getId(); ?>" 
+           class="btn btn-danger" 
+           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+           Supprimer
+        </a>
+    <?php endif; ?>
 </div>

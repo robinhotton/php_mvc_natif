@@ -205,11 +205,10 @@ class UserController extends BaseController {
         // Supprimer l'utilisateur
         if ($this->userRepository->delete($id)) {
             $_SESSION['success'] = "Utilisateur supprimé avec succès";
+            header('Location: /users');
+            exit;
         } else {
             $_SESSION['error'] = "Erreur lors de la suppression de l'utilisateur";
         }
-        
-        header('Location: /users');
-        exit;
     }
 }

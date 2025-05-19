@@ -9,6 +9,7 @@
         <tr>
             <th>Nom d'utilisateur</th>
             <th>Email</th>
+            <th>Rôle</th>
             <th>Date de création</th>
             <th>Date de mise à jour</th>
             <th>Actions</th>
@@ -24,6 +25,7 @@
                 <tr>
                     <td><?php echo htmlspecialchars($user->getUsername()); ?></td>
                     <td><?php echo htmlspecialchars($user->getEmail()); ?></td>
+                    <td><?php echo htmlspecialchars($user->getRole()); ?></td>
                     <td><?php echo $user->getCreatedAt(); ?></td>
                     <td><?php echo $user->getUpdatedAt(); ?></td>
                     <td class="actions">
